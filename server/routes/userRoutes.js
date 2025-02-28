@@ -1,12 +1,15 @@
 const express = require('express');
-const { registerUser, loginUser } = require('../controllers/userController');
+const {
+  registerUserController,
+  loginUserController,
+} = require('../controllers/userController');
 
 const router = express.Router();
 
-router.get('/', (rew, res) => {
+router.get('/', (req, res) => {
   res.send('Welcome to the E-Commerce API');
 });
-router.post('/register', registerUser);
-router.post('/login', loginUser);
+router.post('/register', registerUserController);
+router.post('/login', loginUserController);
 
 module.exports = router;
