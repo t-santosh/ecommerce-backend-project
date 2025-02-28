@@ -2,27 +2,32 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const messages = require('../utils/messages');
+const { registerUser } = require('../api/userApi');
 require('dotenv').config();
 
 // User register controller
-const registerUser = async (req, res) => {
+const registerUserController = async (req, res) => {
   try {
     const { first_name, last_name, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      first_name,
-      last_name,
-      email,
-      password: hashedPassword,
-    });
+
+    // Call the handler to register the user
+    const user = await registerUser({ first_name, last_name, email, password });
+
+    // Send response
     res.status(201).json({ message: messages.USER_REGISTERED_SUCCESS, user });
   } catch (error) {
-    res.status(500).json({ error: messages.USER_REGISTER_FAILED });
+    // Check the error message
+    if (error.message === 'User already exists!') {
+      return res
+        .status(400)
+        .json({ message: messages.USER_ALREADY_REGISTERED });
+    }
+    res.status(500).json({ message: messages.USER_REGISTER_FAILED });
   }
 };
 
 // User login controller
-const loginUser = async (req, res) => {
+const loginUserController = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ where: { email } });
@@ -39,4 +44,4 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+module.exports = { registerUserController, loginUserController };

@@ -24,6 +24,7 @@ const User = db.define(
   },
   {
     timestamps: true,
+    tableName: 'users', // Explicitly specifying the table name in lowercase
   }
 );
 
