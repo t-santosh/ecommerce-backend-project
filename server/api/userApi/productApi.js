@@ -2,7 +2,7 @@ const { Product } = require('../../models/');
 
 // Add new product api
 const addProduct = async (productData) => {
-  const { name, description, price } = productData;
+  const { name, description, price, UserId } = productData;
 
   // Check if all required fields are provided
   if (!name || !price) {
@@ -14,6 +14,7 @@ const addProduct = async (productData) => {
     name,
     description,
     price,
+    UserId,
   });
 
   return {
@@ -21,6 +22,7 @@ const addProduct = async (productData) => {
     name: newProduct.name,
     description: newProduct.description,
     price: newProduct.price,
+    UserId: newProduct.UserId,
   };
 };
 

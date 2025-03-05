@@ -10,4 +10,5 @@ module.exports = {
   // messages for product
   ADD_PRODUCT_SUCCESS: 'Product created successfully.',
   ADD_PRODUCT_ERROR: 'Error creating product.',
+  PRODUCTS_NOT_FOUND: 'No products found.',
 };
