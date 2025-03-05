@@ -2,11 +2,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const messages = require('../utils/messages');
-const { registerUser } = require('../api/userApi');
+const { registerUser } = require('../api/userApi/userRegisterApi');
 require('dotenv').config();
 
 // User register controller
-const registerUserController = async (req, res) => {
+const userRegisterController = async (req, res) => {
   try {
     const { first_name, last_name, email, password } = req.body;
 
@@ -27,21 +27,55 @@ const registerUserController = async (req, res) => {
 };
 
 // User login controller
-const loginUserController = async (req, res) => {
+const userLoginController = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ where: { email } });
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ error: messages.USER_INVALID_CREDENTIALS });
+      return res
+        .status(401)
+        .json({ message: messages.USER_INVALID_CREDENTIALS });
     }
     const jwtSecret = process.env.JWT_SECRET;
     const token = jwt.sign({ id: user.id }, jwtSecret, {
       expiresIn: '1hr',
     });
-    res.json({ message: messages.USER_LOGIN_SUCCESS, token });
+    res.json({
+      message: messages.USER_LOGIN_SUCCESS,
+      token,
+      // Including the user data in response
+      user: {
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+      },
+    });
   } catch (error) {
-    res.status(500).json({ error: messages.USER_LOGIN_FAILED });
+    res.status(500).json({ message: messages.USER_LOGIN_FAILED });
   }
 };
 
-module.exports = { registerUserController, loginUserController };
+// User profile controller
+const getUserProfileController = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: ['id', 'first_name', 'last_name', 'email'],
+    });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({
+      user: user,
+    });
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+module.exports = {
+  userRegisterController,
+  userLoginController,
+  getUserProfileController,
+};
