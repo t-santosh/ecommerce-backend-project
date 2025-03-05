@@ -42,4 +42,20 @@ const getAllProductController = async (req, res) => {
       .json({ message: 'Internal server error', error: error.message });
   }
 };
-module.exports = { addProductController, getAllProductController };
+
+// Fetch a product by id controller
+const getProductByIdController = async (req, res) => {
+  try {
+    const product = await Product.findByPk(req.params.id, {
+      attributes: ['id', 'name', 'description', 'price'],
+    });
+    if (!product) {
+      return res.status(400).json({ message: PRODUCTS_NOT_FOUND });
+    }
+    res.json({ product });
+  } catch (error) {
+    console.error('Error fetching product', error);
+    res.status(500).json({ message: PRODUCTS_NOT_FOUND });
+  }
+};
+module.exports = { addProductController, getAllProductController, getProductByIdController };
