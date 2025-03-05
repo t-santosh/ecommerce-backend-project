@@ -16,13 +16,10 @@ const Product = db.define(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    image_url: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
   },
   {
     timestamps: true,
+    tableName: 'products', // Explicitly specifying the table name in lowercase
   }
 );
 

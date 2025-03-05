@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', userRoutes);
+app.use('/api/products', productRoutes);
 
 // Connect to MySQL database
 db.authenticate()
