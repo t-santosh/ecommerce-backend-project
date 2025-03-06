@@ -10,20 +10,24 @@ const addProduct = async (productData) => {
   }
 
   // Create a new product in the database
-  const newProduct = await Product.create({
-    name,
-    description,
-    price,
-    UserId,
-  });
+  try {
+    const newProduct = await Product.create({
+      name,
+      description,
+      price,
+      UserId,
+    });
 
-  return {
-    id: newProduct.id,
-    name: newProduct.name,
-    description: newProduct.description,
-    price: newProduct.price,
-    UserId: newProduct.UserId,
-  };
+    return {
+      id: newProduct.id,
+      name: newProduct.name,
+      description: newProduct.description,
+      price: newProduct.price,
+      UserId: newProduct.UserId,
+    };
+  } catch (error) {
+    throw new Error('Failed to create product. Please try again.');
+  }
 };
 
 module.exports = { addProduct };

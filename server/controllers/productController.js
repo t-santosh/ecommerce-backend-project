@@ -1,3 +1,5 @@
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const { addProduct } = require('../api/userApi/productApi');
 const { Product } = require('../models');
 const {
@@ -9,10 +11,26 @@ const {
 // Add product controller
 const addProductController = async (req, res) => {
   try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: 'Authorization token is missing' });
+    }
+
+    //Decode the token and extract the user ID
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
     const { name, description, price } = req.body;
 
     // Call the handler to add new product
-    const product = await addProduct({ name, description, price });
+    const product = await addProduct({
+      name,
+      description,
+      price,
+      UserId: userId,
+    });
     //Send response
     res.status(201).json({ message: ADD_PRODUCT_SUCCESS, product });
   } catch (error) {
@@ -58,4 +76,8 @@ const getProductByIdController = async (req, res) => {
     res.status(500).json({ message: PRODUCTS_NOT_FOUND });
   }
 };
-module.exports = { addProductController, getAllProductController, getProductByIdController };
+module.exports = {
+  addProductController,
+  getAllProductController,
+  getProductByIdController,
+};
