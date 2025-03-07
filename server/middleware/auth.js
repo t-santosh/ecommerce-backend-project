@@ -18,10 +18,24 @@ const verifyToken = async (req, res, next) => {
       return res.status(404).json({ message: 'User not found' });
     }
     req.user = user;
+    console.log('Decoded User: ', req.user);
     next();
   } catch (error) {
     res.status(401).json({ message: 'Invalid or expired token' });
   }
 };
 
-module.exports = verifyToken;
+// Middleware to verify if the user is an admin
+const verifyAdmin = (req, res, next) => {
+  console.log('Checking Admin Status: ', req.user);
+  try {
+    if (!req.user || !req.user.isAdmin) {
+      return res.status(403).json({ message: 'Access denied. Admins only.' });
+    }
+    next();
+  } catch (error) {
+    res.status(401).json({ message: 'Unauthorized' });
+  }
+};
+
+module.exports = { verifyToken, verifyAdmin };

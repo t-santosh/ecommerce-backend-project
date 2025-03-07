@@ -4,7 +4,7 @@ const {
   userLoginController,
   getUserProfileController,
 } = require('../controllers/userController');
-const verifyToken = require('../middleware/auth');
+const { verifyToken, verifyAdmin } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 });
 router.post('/register', userRegisterController);
 router.post('/login', userLoginController);
-router.get('/profile', verifyToken, getUserProfileController);
+router.get('/profile', verifyToken, verifyAdmin, getUserProfileController);
 
 // Protected route to verify the token
 router.get('/verify-token', verifyToken, (req, res) => {

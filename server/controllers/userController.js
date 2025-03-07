@@ -37,7 +37,7 @@ const userLoginController = async (req, res) => {
         .json({ message: messages.USER_INVALID_CREDENTIALS });
     }
     const jwtSecret = process.env.JWT_SECRET;
-    const token = jwt.sign({ id: user.id }, jwtSecret, {
+    const token = jwt.sign({ id: user.id, isAdmin: user.isAdmin }, jwtSecret, {
       expiresIn: '1hr',
     });
     res.json({
