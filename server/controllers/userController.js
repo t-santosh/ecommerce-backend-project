@@ -49,6 +49,7 @@ const userLoginController = async (req, res) => {
         first_name: user.first_name,
         last_name: user.last_name,
         email: user.email,
+        isAdmin: user.isAdmin,
       },
     });
   } catch (error) {
@@ -60,7 +61,7 @@ const userLoginController = async (req, res) => {
 const getUserProfileController = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
-      attributes: ['id', 'first_name', 'last_name', 'email'],
+      attributes: ['id', 'first_name', 'last_name', 'email', 'isAdmin'],
     });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
