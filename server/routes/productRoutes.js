@@ -8,8 +8,8 @@ const { verifyToken, verifyAdmin } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.post('/', verifyToken, verifyAdmin, addProductController);
-router.get('/', verifyToken, verifyAdmin, getAllProductController);
-router.get('/:id', verifyToken, verifyAdmin, getProductByIdController);
+router.post('/', verifyToken, addProductController);
+router.get('/', getAllProductController);
+router.get('/:id', getProductByIdController);
 
 module.exports = router;
