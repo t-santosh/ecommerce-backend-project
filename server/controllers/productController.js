@@ -1,5 +1,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const path = require('path');
 const { addProduct } = require('../api/userApi/productApi');
 const { Product } = require('../models');
 const {
@@ -23,12 +24,14 @@ const addProductController = async (req, res) => {
     const userId = decoded.id;
 
     const { name, description, price } = req.body;
+    const image = req.file ? `${req.file.filename}` : null;
 
     // Call the handler to add new product
     const product = await addProduct({
       name,
       description,
       price,
+      image,
       UserId: userId,
     });
     //Send response
