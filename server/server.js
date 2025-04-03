@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path')
 const db = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 
 app.use('/api', userRoutes);
 app.use('/api/products', productRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MySQL database
 db.authenticate()

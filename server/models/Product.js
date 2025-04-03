@@ -16,6 +16,10 @@ const Product = db.define(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     UserId: {
       type: DataTypes.INTEGER,
       allowNull: false,
